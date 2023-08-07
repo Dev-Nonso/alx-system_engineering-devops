@@ -1,0 +1,2 @@
+#!/bin/bash
+grep "^[[:alphat:]]"*/etc/ssh/sshd_config
