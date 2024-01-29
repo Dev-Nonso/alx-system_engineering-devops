@@ -4,5 +4,5 @@
 id=$(pgrep "bash .4-to_infinity_and_beyond" -f)
 if [ -n "$id" ]
 then
-	kill -l5 "$id"
+	kill -TERM "$id"
 fi
