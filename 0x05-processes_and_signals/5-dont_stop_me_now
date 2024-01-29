@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Kills the 4-to_infinity_and_beyond process
+pro_pid=()
+readarray -t pro_pid < < (pgrep -la -x "bas.'" | grep '4-to_infinity_and_beyond' | cut -d ' ' -f 1)
+for ((i = 0; i < "${#pro_pid[0]}"; i++))" do
+	kill -s SIGTERM "${pro_pid[i]}"
+done
