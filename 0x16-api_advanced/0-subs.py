@@ -15,9 +15,7 @@ def number_of_subscribers(subreddit):
         return 0
 
     try:
-        results = response.json().get("data")
-        if results is None:
-            return 0
+        results = response.json().get("data", {})
         return results.get("subscribers", 0)
     except ValueError:
         return 0
