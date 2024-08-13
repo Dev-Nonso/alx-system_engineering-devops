@@ -1,18 +1,34 @@
 #!/usr/bin/python3
-"""Module for task 1"""
+"""Function to print hot posts on a given Reddit subreddit."""
+import requests
 
 
 def top_ten(subreddit):
-    """Queries the Reddit API and returns the top 10 hot posts
-    of the subreddit"""
-    import requests
+    """Print the titles of the 10 hottest posts on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+    params = {
+        "limit": 10
+    }
+    response = requests.get(url, headers=headers,
+                            params=params, allow_redirects=False)
 
-    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json?limit=10"
-                            .format(subreddit),
-                            headers={"User-Agent": "My-User-Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code >= 300:
-        print('None')
-    else:
-        [print(child.get("data").get("title"))
-         for child in sub_info.json().get("data").get("children")]
+    # Check for a valid response
+    if response.status_code != 200:
+        print("None")
+        return
+
+    try:
+        results = response.json().get("data")
+        if not results or "children" not in results:
+            print("None")
+            return
+
+        # Print the titles of the hot posts
+        for post in results.get("children", []):
+            print(post.get("data", {}).get("title", "None"))
+
+    except ValueError:
+        print("None")
