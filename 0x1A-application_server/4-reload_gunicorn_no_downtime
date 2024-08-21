@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Function to find the master PID of the Gunicorn process
+get_gunicorn_master_pid() {
+    pid=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
+    echo "$pid"
+}
+
+# Reload Gunicorn gracefully
+reload_gunicorn() {
+    # Get the master PID of the Gunicorn process
+    master_pid=$(get_gunicorn_master_pid)
+
+    # Check if the PID was found
+    if [ -z "$master_pid" ]; then
+        echo "Gunicorn master process not found."
+        exit 1
+    fi
+
+    # Send the HUP signal to the master process to reload it gracefully
+    kill -HUP "$master_pid"
+    echo "Sent HUP signal to Gunicorn master process (PID: $master_pid) to reload gracefully."
+}
+
+# Execute the reload function
+reload_gunicorn
